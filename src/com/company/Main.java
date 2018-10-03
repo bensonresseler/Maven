@@ -4,26 +4,38 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        Cursist joske = new Cursist("Joske", LocalDate.of(2000, Month.OCTOBER, 30));
+        Cursist Karen = new Cursist("Karen", LocalDate.of(1974, Month.OCTOBER, 28));
         Cursus cursus = new Cursus("Java", 70, 3);
-        System.out.printf("De cursus %s duurt %d dagen. Er is plaats voor %d deelnemers%n", cursus.getNaam(), cursus.getAantalDagen(), cursus.getMaxdeelnemers());
-        cursus.schrijfCursistIn(joske);
-
-        if(cursus.getAantalCursisten() == 1){
-            System.out.printf("Na het inschrijven van %s is er %d deelnemer.%n", joske.getNaam(), cursus.getAantalCursisten());
-
-        } else{
-            System.out.printf("Na het inschrijven van %s zijn er %d deelnemers%n", joske.getNaam(), cursus.getAantalCursisten());
-
+        cursus.schrijfCursistIn(Karen);
+        for (Cursist c:cursus) {
+            System.out.printf("%s (%d jaar) is ingeschreven.%n", c.getNaam(), c.getLeeftijd());
         }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Geef naam nieuwe cursist: ");
+        String naam = scanner.nextLine();
+        System.out.print("Geef geboortejaar nieuwe cursist: ");
+        int geboortejaar = Integer.parseInt(scanner.nextLine());
+        System.out.print("Geef geboortemaand nieuwe cursist: ");
+        int geboortemaand = Integer.parseInt(scanner.nextLine());
+        System.out.print("Geef geboortedag nieuwe cursist: ");
+        int geboortedag = Integer.parseInt(scanner.nextLine());
+        LocalDate geboortedatum = LocalDate.of(geboortejaar, geboortemaand, geboortedag);
+        Cursist curs = new Cursist(naam, geboortedatum);
+        cursus.schrijfCursistIn(curs);
+        System.out.printf("%s (%d jaar) is ingeschreven.%n", curs.getNaam(), curs.getLeeftijd());
+
+
     }
 }
 
-class Cursus{
+class Cursus implements Iterable<Cursist>{
     private String cursusNaam;
     private Integer duurtijd;
     private Integer aantalPlaatsen;
@@ -53,6 +65,12 @@ class Cursus{
 
     public Integer getAantalCursisten(){
         return cursisten.size();
+    }
+
+
+    @Override
+    public Iterator<Cursist> iterator() {
+        return cursisten.iterator();
     }
 }
 
