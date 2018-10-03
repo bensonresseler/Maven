@@ -10,26 +10,21 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Cursist Karen = new Cursist("Karen", LocalDate.of(1974, Month.OCTOBER, 28));
         Cursus cursus = new Cursus("Java", 70, 3);
-        cursus.schrijfCursistIn(Karen);
-        for (Cursist c:cursus) {
-            System.out.printf("%s (%d jaar) is ingeschreven.%n", c.getNaam(), c.getLeeftijd());
-        }
+        Cursist Karen = new Cursist("Karen", LocalDate.of(1974, Month.OCTOBER, 28));
+        Cursist Joske = new Cursist("Joske", LocalDate.of(2000, Month.OCTOBER, 30));
+        Cursist Kristel = new Cursist("Kristel", LocalDate.of(1975, Month.DECEMBER, 8));
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Geef naam nieuwe cursist: ");
-        String naam = scanner.nextLine();
-        System.out.print("Geef geboortejaar nieuwe cursist: ");
-        int geboortejaar = Integer.parseInt(scanner.nextLine());
-        System.out.print("Geef geboortemaand nieuwe cursist: ");
-        int geboortemaand = Integer.parseInt(scanner.nextLine());
-        System.out.print("Geef geboortedag nieuwe cursist: ");
-        int geboortedag = Integer.parseInt(scanner.nextLine());
-        LocalDate geboortedatum = LocalDate.of(geboortejaar, geboortemaand, geboortedag);
-        Cursist curs = new Cursist(naam, geboortedatum);
-        cursus.schrijfCursistIn(curs);
-        System.out.printf("%s (%d jaar) is ingeschreven.%n", curs.getNaam(), curs.getLeeftijd());
+        cursus.schrijfCursistIn(Joske);
+        cursus.schrijfCursistIn(Karen);
+        cursus.schrijfCursistIn(Kristel);
+
+        System.out.println("De ingeschreven cursisten zijn: ");
+        int teller = 1;
+        for(Cursist c: cursus){
+            System.out.printf("%d. %s%n", teller, c.getNaam());
+            teller ++;
+        }
 
 
     }
