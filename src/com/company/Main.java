@@ -3,16 +3,60 @@ package com.company;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
+import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
         Cursist joske = new Cursist("Joske", LocalDate.of(2000, Month.OCTOBER, 30));
-        System.out.printf("%s is geboren op %s en is %d jaar oud.%n", joske.getNaam(), joske.getGeboortedatum(), joske.getLeeftijd());
+        Cursus cursus = new Cursus("Java", 70, 3);
+        System.out.printf("De cursus %s duurt %d dagen. Er is plaats voor %d deelnemers%n", cursus.getNaam(), cursus.getAantalDagen(), cursus.getMaxdeelnemers());
+        cursus.schrijfCursistIn(joske);
+
+        if(cursus.getAantalCursisten() == 1){
+            System.out.printf("Na het inschrijven van %s is er %d deelnemer.%n", joske.getNaam(), cursus.getAantalCursisten());
+
+        } else{
+            System.out.printf("Na het inschrijven van %s zijn er %d deelnemers%n", joske.getNaam(), cursus.getAantalCursisten());
+
+        }
     }
 }
 
-class Cursist{
+class Cursus{
+    private String cursusNaam;
+    private Integer duurtijd;
+    private Integer aantalPlaatsen;
+    private ArrayList<Cursist> cursisten =  new ArrayList<>();
+
+    public Cursus(String cursusNaam, Integer duurtijd, Integer aantalPlaatsen) {
+        this.cursusNaam = cursusNaam;
+        this.duurtijd = duurtijd;
+        this.aantalPlaatsen = aantalPlaatsen;
+    }
+
+    public void schrijfCursistIn(Cursist cursist){
+        cursisten.add(cursist);
+    }
+
+    public String getNaam() {
+        return cursusNaam;
+    }
+
+    public Integer getAantalDagen() {
+        return duurtijd;
+    }
+
+    public Integer getMaxdeelnemers() {
+        return aantalPlaatsen;
+    }
+
+    public Integer getAantalCursisten(){
+        return cursisten.size();
+    }
+}
+
+class Cursist {
     private String naam;
     private LocalDate geboortedatum;
 
@@ -36,11 +80,8 @@ class Cursist{
     public void setGeboortedatum(LocalDate geboortedatum) {
         this.geboortedatum = geboortedatum;
     }
-
-    public Integer getLeeftijd() {
-        LocalDate vandaag = LocalDate.now();
-        Period periode = Period.between(geboortedatum,vandaag);
-        Integer leeftijd = periode.getYears();
-        return leeftijd;
+    public int getLeeftijd(){
+        Period periode = Period.between(geboortedatum,LocalDate.now());
+        return periode.getYears();
     }
 }
