@@ -13,32 +13,57 @@ public class Main {
         Cursist Joske = new Cursist("Joske", LocalDate.of(2000, Month.OCTOBER, 30));
         Cursist Kristel = new Cursist("Kristel", LocalDate.of(1975, Month.DECEMBER, 8));
 
-        cursus.schrijfCursistIn(Joske);
-        cursus.schrijfCursistIn(Karen);
-        cursus.schrijfCursistIn(Kristel);
+        try {
+            cursus.schrijfCursistIn(Karen);
+        } catch (CursusException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            cursus.schrijfCursistIn(Kristel);
+        } catch (CursusException ex) {
+            System.out.println(ex.getMessage());
+        }
 
         toonCursisten(cursus);
 
-        cursus.schrijfCursistUit(Joske);
-        toonCursisten(cursus);
+        System.out.printf("We schrijven %s in %n", Joske.getNaam());
+        try {
+            cursus.schrijfCursistIn(Joske);
+        } catch (CursusException ex) {
+            System.out.println(ex.getMessage());
+        }
+        System.out.printf("We schrijven %s uit%n", Joske.getNaam());
+        try {
+            cursus.schrijfCursistUit(Joske);
+        } catch (CursusException ex) {
+            System.out.println(ex.getMessage());
+        }
 
     }
 
     private static void toonCursisten(Cursus cursus) {
         System.out.println("De ingeschreven cursisten zijn: ");
         int teller = 1;
-        for(Cursist c: cursus){
+        for (Cursist c : cursus) {
             System.out.printf("%d. %s%n", teller, c.getNaam());
-            teller ++;
+            teller++;
         }
     }
 }
 
-class Cursus implements Iterable<Cursist>{
+class CursusException extends Exception {
+    public CursusException(String message) {
+        super(message);
+    }
+}
+
+
+class Cursus implements Iterable<Cursist> {
     private String cursusNaam;
     private Integer duurtijd;
     private Integer aantalPlaatsen;
-    private List<Cursist> cursisten =  new ArrayList<>();
+    private List<Cursist> cursisten = new ArrayList<>();
 
     public Cursus(String cursusNaam, Integer duurtijd, Integer aantalPlaatsen) {
         this.cursusNaam = cursusNaam;
@@ -46,15 +71,22 @@ class Cursus implements Iterable<Cursist>{
         this.aantalPlaatsen = aantalPlaatsen;
     }
 
-    public void schrijfCursistIn(Cursist cursist){
-        cursisten.add(cursist);
-        System.out.printf("Cursist %s is ingeschreven.%n", cursist.getNaam());
-
+    public void schrijfCursistIn(Cursist cursist) throws CursusException {
+        if (cursisten.size() == 2) {
+            throw new CursusException("Maximum aantal deelnemers is bereikt.\n");
+        } else {
+            cursisten.add(cursist);
+            System.out.printf("Cursist %s is ingeschreven.%n", cursist.getNaam());
+        }
     }
 
-    public void schrijfCursistUit(Cursist cursist){
-        cursisten.remove(cursist);
-        System.out.printf("Cursist %s is uitgeschreven.%n", cursist.getNaam());
+    public void schrijfCursistUit(Cursist cursist) throws CursusException {
+        if (cursisten.contains(cursist)) {
+            cursisten.remove(cursist);
+            System.out.printf("Cursist %s is uitgeschreven.%n", cursist.getNaam());
+        } else {
+            throw new CursusException("Cursist is niet ingeschreven.\n");
+        }
     }
 
 
@@ -70,7 +102,7 @@ class Cursus implements Iterable<Cursist>{
         return aantalPlaatsen;
     }
 
-    public Integer getAantalCursisten(){
+    public Integer getAantalCursisten() {
         return cursisten.size();
     }
 
@@ -105,8 +137,8 @@ class Cursist {
         this.geboortedatum = geboortedatum;
     }
 
-    public int getLeeftijd(){
-        Period periode = Period.between(geboortedatum,LocalDate.now());
+    public int getLeeftijd() {
+        Period periode = Period.between(geboortedatum, LocalDate.now());
         return periode.getYears();
     }
 
